@@ -7,6 +7,7 @@ import com.pasteleriaPri.Pasteleria.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +17,7 @@ public class ClientService implements IClientService{
     @Autowired
     private ClientRepository clientRepository;
 
+
     @Override
     public ClientDTO save(ClientDTO clientDTO) {
         Client newClient = Mapper.toClient(clientDTO);
@@ -23,13 +25,18 @@ public class ClientService implements IClientService{
     }
 
     @Override
-    public Optional<Client> findById(Long id) {
-        return clientRepository.findById(id);
+    public Optional<ClientDTO> findById(Long id) {
+        return clientRepository.findById(id).map(Mapper::toClientDTO);
     }
 
     @Override
-    public List<Client> findAll() {
-        return clientRepository.findAll();
+    public List<ClientDTO> findAll() {
+        List <Client> clients = clientRepository.findAll();
+        List <ClientDTO> clientDTOs = new ArrayList<>();
+        for (Client client : clients) {
+            clientDTOs.add(Mapper.toClientDTO(client));
+        }
+        return clientDTOs;
     }
 
     @Override
@@ -38,8 +45,18 @@ public class ClientService implements IClientService{
     }
 
     @Override
-    public Client update(Long id, Client client) {
-        client.setIdClient(id);
-        return clientRepository.save(client);
+    public ClientDTO update(Long id, ClientDTO clientDTO) {
+        Client foundClient = clientRepository.findById(id).orElse(null);
+
+        foundClient.setUsername(clientDTO.getUsernameDTO());
+        foundClient.setSurname(clientDTO.getSurnameDTO());
+        foundClient.setEmail(clientDTO.getEmailDTO());
+        foundClient.setPassword(clientDTO.getPasswordDTO());
+        foundClient.setCity(clientDTO.getCityDTO());
+        //foundClient.setOrders(clientDTO.get);
+        foundClient.setAddress(clientDTO.getAddressDTO());
+        foundClient.setPhone(clientDTO.getPhoneDTO());
+
+        return Mapper.toClientDTO(clientRepository.save(foundClient));
     }
 }

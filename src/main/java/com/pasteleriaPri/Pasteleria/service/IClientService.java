@@ -1,15 +1,13 @@
 package com.pasteleriaPri.Pasteleria.service;
 
 import com.pasteleriaPri.Pasteleria.dto.ClientDTO;
-import com.pasteleriaPri.Pasteleria.entity.Client;
-
 import java.util.List;
 import java.util.Optional;
 
 public interface IClientService {
-    ClientDTO save(ClientDTO client);
-    Optional<Client> findById(Long id);
-    List<Client> findAll();
+    ClientDTO save(ClientDTO clientDTO);
+    Optional<ClientDTO> findById(Long id);
+    List<ClientDTO> findAll();
     void deleteById(Long id);
-    Client update(Long id, Client client);
+    ClientDTO update(Long id, ClientDTO clientDTO);
 }
