@@ -1,4 +1,4 @@
-package com.pasteleriaPri.Pasteleria.service.impl;
+package com.pasteleriaPri.Pasteleria.service;
 
 import com.pasteleriaPri.Pasteleria.entity.Order;
 import com.pasteleriaPri.Pasteleria.entity.OrderState;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class OrderServiceImpl implements OrderService {
+public class OrderService implements IOrderService{
 
     @Autowired
     private OrderRepository orderRepository;

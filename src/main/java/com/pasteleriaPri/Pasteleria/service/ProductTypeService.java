@@ -1,4 +1,4 @@
-package com.pasteleriaPri.Pasteleria.service.impl;
+package com.pasteleriaPri.Pasteleria.service;
 
 import com.pasteleriaPri.Pasteleria.entity.ProductType;
 import com.pasteleriaPri.Pasteleria.repository.ProductTypeRepository;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ProductTypeServiceImpl implements ProductTypeService {
+public class ProductTypeService implements IProductTypeService {
 
     @Autowired
     private ProductTypeRepository productTypeRepository;

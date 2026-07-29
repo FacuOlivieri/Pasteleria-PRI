@@ -1,4 +1,4 @@
-package com.pasteleriaPri.Pasteleria.service.impl;
+package com.pasteleriaPri.Pasteleria.service;
 
 import com.pasteleriaPri.Pasteleria.entity.Payment;
 import com.pasteleriaPri.Pasteleria.repository.PaymentRepository;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PaymentServiceImpl implements PaymentService {
+public class PaymentService implements IPaymentService {
 
     @Autowired
     private PaymentRepository paymentRepository;

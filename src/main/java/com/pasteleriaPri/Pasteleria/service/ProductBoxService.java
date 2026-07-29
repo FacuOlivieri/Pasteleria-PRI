@@ -1,4 +1,4 @@
-package com.pasteleriaPri.Pasteleria.service.impl;
+package com.pasteleriaPri.Pasteleria.service;
 
 import com.pasteleriaPri.Pasteleria.entity.BoxSize;
 import com.pasteleriaPri.Pasteleria.entity.BoxType;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ProductBoxServiceImpl implements ProductBoxService {
+public class ProductBoxService implements IProductBoxService {
 
     @Autowired
     private ProductBoxRepository productBoxRepository;
