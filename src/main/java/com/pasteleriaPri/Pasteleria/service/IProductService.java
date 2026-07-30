@@ -11,4 +11,5 @@ public interface IProductService {
     List<ProductDTO> findAll();
     void deleteById(Long id);
     ProductDTO update(Long id, ProductDTO product);
+    List<ProductDTO> findAllByProductsByType(Long productTypeId);
 }

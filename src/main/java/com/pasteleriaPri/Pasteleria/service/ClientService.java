@@ -56,7 +56,6 @@ public class ClientService implements IClientService{
         foundClient.setEmail(clientDTO.getEmailDTO());
         foundClient.setPassword(clientDTO.getPasswordDTO());
         foundClient.setCity(clientDTO.getCityDTO());
-        foundClient.setOrders(clientDTO.getOrdersDTO());
         foundClient.setAddress(clientDTO.getAddressDTO());
         foundClient.setPhone(clientDTO.getPhoneDTO());
         clientRepository.save(foundClient);

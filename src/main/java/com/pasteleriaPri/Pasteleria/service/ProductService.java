@@ -67,4 +67,9 @@ public class ProductService implements IProductService {
         return Mapper.toProductDTO(productToUpdate);
 
     }
+
+    @Override
+    public List<ProductDTO> findAllByProductsByType(Long productTypeId) {
+        return productRepository.findAllByProductType(productTypeId);
+    }
 }

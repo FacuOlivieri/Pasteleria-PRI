@@ -1,14 +1,14 @@
 package com.pasteleriaPri.Pasteleria.service;
 
-import com.pasteleriaPri.Pasteleria.entity.ProductType;
+import com.pasteleriaPri.Pasteleria.dto.ProductTypeDTO;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface IProductTypeService {
-    ProductType save(ProductType productType);
-    Optional<ProductType> findById(Long id);
-    List<ProductType> findAll();
+    ProductTypeDTO save(ProductTypeDTO productTypeDTO);
+    Optional<ProductTypeDTO> findById(Long id);
+    List<ProductTypeDTO> findAll();
     void deleteById(Long id);
-    ProductType update(Long id, ProductType productType);
+    ProductTypeDTO update(Long id, ProductTypeDTO productTypeDTO);
 }

@@ -1,5 +1,6 @@
 package com.pasteleriaPri.Pasteleria.repository;
 
+import com.pasteleriaPri.Pasteleria.dto.ProductDTO;
 import com.pasteleriaPri.Pasteleria.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -8,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    List<Product> findByProductTypeIdProductType(Long productTypeId);
+    List<ProductDTO> findAllByProductType(Long productTypeId);
 }
