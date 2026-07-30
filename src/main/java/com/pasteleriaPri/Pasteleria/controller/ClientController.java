@@ -9,19 +9,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
-@RequestMapping ("/api/pasteleria/cliente")
+@RequestMapping ("/api/pasteleria/client")
 public class ClientController {
 
     @Autowired
     private ClientService clientService;
 
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<ClientDTO> createClient(@RequestBody ClientDTO clientDTO) {
         ClientDTO newClientDTO = clientService.save(clientDTO);
-        return ResponseEntity.created(URI.create("/api/pasteleria/cliente")).body(newClientDTO);
+        return ResponseEntity.created(URI.create("/api/pasteleria/client")).body(newClientDTO);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ClientDTO>> getAllClients() {
+        return ResponseEntity.ok(clientService.findAll());
     }
 
 
