@@ -83,6 +83,9 @@ public class Mapper {
         productBox.setTotalPrice(productBoxDTO.getTotalPriceDTO());
         productBox.setBoxType(productBoxDTO.getBoxTypeDTO());
         productBox.setBoxSize(productBoxDTO.getBoxSizeDTO());
+        productBox.setProducts(productBoxDTO.getProductsDTO() != null
+                ? productBoxDTO.getProductsDTO().stream().map(Mapper::toProduct).collect(Collectors.toList())
+                : Collections.emptyList());
         return productBox;
     }
 

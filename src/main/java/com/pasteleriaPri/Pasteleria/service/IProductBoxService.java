@@ -1,18 +1,18 @@
 package com.pasteleriaPri.Pasteleria.service;
 
+import com.pasteleriaPri.Pasteleria.dto.ProductBoxDTO;
 import com.pasteleriaPri.Pasteleria.entity.BoxSize;
 import com.pasteleriaPri.Pasteleria.entity.BoxType;
-import com.pasteleriaPri.Pasteleria.entity.ProductBox;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface IProductBoxService {
-    ProductBox save(ProductBox productBox);
-    Optional<ProductBox> findById(Long id);
-    List<ProductBox> findAll();
+    ProductBoxDTO save(ProductBoxDTO productBoxDTO);
+    Optional<ProductBoxDTO> findById(Long id);
+    List<ProductBoxDTO> findAll();
     void deleteById(Long id);
-    ProductBox update(Long id, ProductBox productBox);
-    List<ProductBox> findByBoxType(BoxType boxType);
-    List<ProductBox> findByBoxSize(BoxSize boxSize);
+    ProductBoxDTO update(Long id, ProductBoxDTO productBoxDTO);
+    List<ProductBoxDTO> findByBoxType(BoxType boxType);
+    List<ProductBoxDTO> findByBoxSize(BoxSize boxSize);
 }

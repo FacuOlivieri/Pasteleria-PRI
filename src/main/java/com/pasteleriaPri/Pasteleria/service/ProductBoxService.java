@@ -1,13 +1,16 @@
 package com.pasteleriaPri.Pasteleria.service;
 
+import com.pasteleriaPri.Pasteleria.dto.ProductBoxDTO;
 import com.pasteleriaPri.Pasteleria.entity.BoxSize;
 import com.pasteleriaPri.Pasteleria.entity.BoxType;
 import com.pasteleriaPri.Pasteleria.entity.ProductBox;
+import com.pasteleriaPri.Pasteleria.exception.NotFoundException;
+import com.pasteleriaPri.Pasteleria.helpers.Mapper;
 import com.pasteleriaPri.Pasteleria.repository.ProductBoxRepository;
-import com.pasteleriaPri.Pasteleria.service.ProductBoxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,38 +21,65 @@ public class ProductBoxService implements IProductBoxService {
     private ProductBoxRepository productBoxRepository;
 
     @Override
-    public ProductBox save(ProductBox productBox) {
-        return productBoxRepository.save(productBox);
+    public ProductBoxDTO save(ProductBoxDTO productBoxDTO) {
+        ProductBox newProductBox = Mapper.toProductBox(productBoxDTO);
+        return Mapper.toProductBoxDTO(productBoxRepository.save(newProductBox));
     }
 
     @Override
-    public Optional<ProductBox> findById(Long id) {
-        return productBoxRepository.findById(id);
+    public Optional<ProductBoxDTO> findById(Long id) {
+        return Optional.of(productBoxRepository.findById(id)
+                .map(Mapper::toProductBoxDTO)
+                .orElseThrow(() -> new NotFoundException("ProductBox not found")));
     }
 
     @Override
-    public List<ProductBox> findAll() {
-        return productBoxRepository.findAll();
+    public List<ProductBoxDTO> findAll() {
+        List<ProductBox> productBoxes = productBoxRepository.findAll();
+        List<ProductBoxDTO> productBoxDTOs = new ArrayList<>();
+        for (ProductBox productBox : productBoxes) {
+            productBoxDTOs.add(Mapper.toProductBoxDTO(productBox));
+        }
+        return productBoxDTOs;
     }
 
     @Override
     public void deleteById(Long id) {
-        productBoxRepository.deleteById(id);
+        ProductBox productBox = productBoxRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("ProductBox not found"));
+        productBoxRepository.delete(productBox);
     }
 
     @Override
-    public ProductBox update(Long id, ProductBox productBox) {
-        productBox.setIdProductBox(id);
-        return productBoxRepository.save(productBox);
+    public ProductBoxDTO update(Long id, ProductBoxDTO productBoxDTO) {
+        ProductBox foundProductBox = productBoxRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("ProductBox not found"));
+
+        foundProductBox.setTotalPrice(productBoxDTO.getTotalPriceDTO());
+        foundProductBox.setBoxType(productBoxDTO.getBoxTypeDTO());
+        foundProductBox.setBoxSize(productBoxDTO.getBoxSizeDTO());
+        productBoxRepository.save(foundProductBox);
+
+        return Mapper.toProductBoxDTO(foundProductBox);
     }
 
     @Override
-    public List<ProductBox> findByBoxType(BoxType boxType) {
-        return productBoxRepository.findByBoxType(boxType);
+    public List<ProductBoxDTO> findByBoxType(BoxType boxType) {
+        List<ProductBox> productBoxes = productBoxRepository.findByBoxType(boxType);
+        List<ProductBoxDTO> productBoxDTOs = new ArrayList<>();
+        for (ProductBox productBox : productBoxes) {
+            productBoxDTOs.add(Mapper.toProductBoxDTO(productBox));
+        }
+        return productBoxDTOs;
     }
 
     @Override
-    public List<ProductBox> findByBoxSize(BoxSize boxSize) {
-        return productBoxRepository.findByBoxSize(boxSize);
+    public List<ProductBoxDTO> findByBoxSize(BoxSize boxSize) {
+        List<ProductBox> productBoxes = productBoxRepository.findByBoxSize(boxSize);
+        List<ProductBoxDTO> productBoxDTOs = new ArrayList<>();
+        for (ProductBox productBox : productBoxes) {
+            productBoxDTOs.add(Mapper.toProductBoxDTO(productBox));
+        }
+        return productBoxDTOs;
     }
 }
