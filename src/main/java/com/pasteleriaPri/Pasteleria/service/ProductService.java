@@ -70,6 +70,11 @@ public class ProductService implements IProductService {
 
     @Override
     public List<ProductDTO> findAllByProductsByType(Long productTypeId) {
-        return productRepository.findAllByProductType(productTypeId);
+        List<Product> products = productRepository.findAllByProductType_IdProductType(productTypeId);
+        List<ProductDTO> productDTOs = new ArrayList<>();
+        for (Product product : products) {
+            productDTOs.add(Mapper.toProductDTO(product));
+        }
+        return productDTOs;
     }
 }
