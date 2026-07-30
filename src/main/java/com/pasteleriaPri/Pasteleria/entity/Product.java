@@ -20,6 +20,7 @@ public class Product {
     private Integer prodQuantity;
     private Double prodPrice;
     private String prodDescription;
+    private String img;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_type_id")

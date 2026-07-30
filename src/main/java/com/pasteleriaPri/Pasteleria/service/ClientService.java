@@ -28,7 +28,7 @@ public class ClientService implements IClientService{
 
     @Override
     public Optional<ClientDTO> findById(Long id) {
-        return clientRepository.findById(id).map(Mapper::toClientDTO);
+        return Optional.of(clientRepository.findById(id).map(Mapper::toClientDTO).orElseThrow(() -> new NotFoundException("Client Not Found")));
     }
 
     @Override
