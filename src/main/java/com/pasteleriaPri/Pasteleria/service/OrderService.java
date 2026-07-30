@@ -9,6 +9,7 @@ import com.pasteleriaPri.Pasteleria.helpers.Mapper;
 import com.pasteleriaPri.Pasteleria.repository.ClientRepository;
 import com.pasteleriaPri.Pasteleria.repository.OrderRepository;
 import com.pasteleriaPri.Pasteleria.repository.ProductRepository;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,28 +34,23 @@ public class OrderService implements IOrderService {
 
     @Override
     public OrderDTO createOrder(OrderRequestDTO orderRequestDTO) {
-        Client client = clientRepository.findById(orderRequestDTO.getClientIdDTO())
-                .orElseThrow(() -> new NotFoundException("Client not found"));
-
-        Order order = new Order();
-        order.setDestinationAddress(orderRequestDTO.getDestinationAddressDTO());
-        order.setIsPaid(false);
-        order.setOrderDate(LocalDate.now());
-        order.setOrderState(OrderState.confirmation);
-        order.setClient(client);
-        order.setProductBoxes(new ArrayList<>());
-
+        Client client = clientRepository.findById(orderRequestDTO.getClientIdDTO()).orElseThrow(() -> new NotFoundException("Client not found"));
         List<OrderProductDetail> orderDetails = new ArrayList<>();
         double total = 0.0;
+        Order order = createNewOrder(orderRequestDTO, client);
 
+        //Por cada producto que este en la request del Cliente, se crea la linea en la orden de la compra
         for (OrderProductDetailDTO productDetailDTO : orderRequestDTO.getProductDetailsDTO()) {
             Product product = productRepository.findById(productDetailDTO.getProductIdDTO())
                     .orElseThrow(() -> new NotFoundException("Product not found with id: " + productDetailDTO.getProductIdDTO()));
 
+
+            //Calculo Subtotal del Producto
             double unitPrice = product.getProdPrice();
             double subtotal = unitPrice * productDetailDTO.getQuantityDTO();
             total += subtotal;
 
+            //Creacion de la linea del Producto
             OrderProductDetail detail = OrderProductDetail.builder()
                     .product(product)
                     .quantity(productDetailDTO.getQuantityDTO())
@@ -74,6 +70,8 @@ public class OrderService implements IOrderService {
 
         return Mapper.toOrderDTO(orderRepository.save(order));
     }
+
+
 
     @Override
     public Optional<OrderDTO> findById(Long id) {
@@ -116,4 +114,21 @@ public class OrderService implements IOrderService {
         order.setOrderState(orderState);
         return Mapper.toOrderDTO(orderRepository.save(order));
     }
+
+
+
+    /////////////////////////////////////// Métodos HELPERS  ///////////////////////////////////////
+
+    private @NonNull Order createNewOrder(OrderRequestDTO orderRequestDTO, Client client) {
+        Order order = new Order();
+        order.setDestinationAddress(orderRequestDTO.getDestinationAddressDTO());
+        order.setIsPaid(false);
+        order.setOrderDate(LocalDate.now());
+        order.setOrderState(OrderState.confirmation);
+        order.setClient(client);
+        order.setProductBoxes(new ArrayList<>());
+        return order;
+    }
+
+
 }
