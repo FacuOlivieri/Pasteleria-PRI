@@ -7,7 +7,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "product_types")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductType {
@@ -18,8 +19,6 @@ public class ProductType {
 
     private String productTypeName;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "productType", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Product> products;
 }

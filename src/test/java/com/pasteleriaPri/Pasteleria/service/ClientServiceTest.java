@@ -54,7 +54,7 @@ public class ClientServiceTest {
                 .email("facu@gmail.com")
                 .password("1234")
                 .build();
-        when(clientRepoMock.save(Mapper.toClient(clientDTO))).thenReturn(client);
+        when(clientRepoMock.save(any(Client.class))).thenReturn(client);
 
         ClientDTO newClient = clientService.save(clientDTO);
 

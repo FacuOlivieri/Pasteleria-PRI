@@ -5,7 +5,8 @@ import lombok.*;
 
 @Entity
 @Table(name = "payments")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Payment {
@@ -22,8 +23,6 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     private PaymentType paymentType;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     @OneToOne(mappedBy = "payment")
     private Order order;
 }

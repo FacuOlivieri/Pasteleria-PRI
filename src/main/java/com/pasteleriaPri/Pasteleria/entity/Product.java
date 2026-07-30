@@ -7,7 +7,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "products")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product {
@@ -26,13 +27,9 @@ public class Product {
     @JoinColumn(name = "product_type_id")
     private ProductType productType;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     @ManyToMany(mappedBy = "products")
     private List<Order> orders;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     @ManyToMany(mappedBy = "products")
     private List<ProductBox> productBoxes;
 }

@@ -7,7 +7,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "clients")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -25,8 +26,6 @@ public class Client {
     private String email;
     private String password;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Order> orders;
 }
