@@ -1,57 +1,119 @@
 package com.pasteleriaPri.Pasteleria.service;
 
-import com.pasteleriaPri.Pasteleria.entity.Order;
-import com.pasteleriaPri.Pasteleria.entity.OrderState;
+import com.pasteleriaPri.Pasteleria.dto.OrderDTO;
+import com.pasteleriaPri.Pasteleria.dto.OrderProductDetailDTO;
+import com.pasteleriaPri.Pasteleria.dto.OrderRequestDTO;
+import com.pasteleriaPri.Pasteleria.entity.*;
+import com.pasteleriaPri.Pasteleria.exception.NotFoundException;
+import com.pasteleriaPri.Pasteleria.helpers.Mapper;
+import com.pasteleriaPri.Pasteleria.repository.ClientRepository;
 import com.pasteleriaPri.Pasteleria.repository.OrderRepository;
-import com.pasteleriaPri.Pasteleria.service.OrderService;
+import com.pasteleriaPri.Pasteleria.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class OrderService implements IOrderService{
+@Transactional
+public class OrderService implements IOrderService {
 
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private ClientRepository clientRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
     @Override
-    public Order save(Order order) {
-        return orderRepository.save(order);
+    public OrderDTO createOrder(OrderRequestDTO orderRequestDTO) {
+        Client client = clientRepository.findById(orderRequestDTO.getClientIdDTO())
+                .orElseThrow(() -> new NotFoundException("Client not found"));
+
+        Order order = new Order();
+        order.setDestinationAddress(orderRequestDTO.getDestinationAddressDTO());
+        order.setIsPaid(false);
+        order.setOrderDate(LocalDate.now());
+        order.setOrderState(OrderState.confirmation);
+        order.setClient(client);
+        order.setProductBoxes(new ArrayList<>());
+
+        List<OrderProductDetail> orderDetails = new ArrayList<>();
+        double total = 0.0;
+
+        for (OrderProductDetailDTO productDetailDTO : orderRequestDTO.getProductDetailsDTO()) {
+            Product product = productRepository.findById(productDetailDTO.getProductIdDTO())
+                    .orElseThrow(() -> new NotFoundException("Product not found with id: " + productDetailDTO.getProductIdDTO()));
+
+            double unitPrice = product.getProdPrice();
+            double subtotal = unitPrice * productDetailDTO.getQuantityDTO();
+            total += subtotal;
+
+            OrderProductDetail detail = OrderProductDetail.builder()
+                    .product(product)
+                    .quantity(productDetailDTO.getQuantityDTO())
+                    .unitPrice(unitPrice)
+                    .subtotal(subtotal)
+                    .order(order)
+                    .build();
+
+            orderDetails.add(detail);
+        }
+
+        Payment payment = new Payment();
+        payment.setPaymentAmount(total);
+
+        order.setOrderDetails(orderDetails);
+        order.setPayment(payment);
+
+        return Mapper.toOrderDTO(orderRepository.save(order));
     }
 
     @Override
-    public Optional<Order> findById(Long id) {
-        return orderRepository.findById(id);
+    public Optional<OrderDTO> findById(Long id) {
+        return Optional.of(orderRepository.findById(id)
+                .map(Mapper::toOrderDTO)
+                .orElseThrow(() -> new NotFoundException("Order not found")));
     }
 
     @Override
-    public List<Order> findAll() {
-        return orderRepository.findAll();
+    public List<OrderDTO> findAll() {
+        List<Order> orders = orderRepository.findAll();
+        List<OrderDTO> orderDTOs = new ArrayList<>();
+        for (Order order : orders) {
+            orderDTOs.add(Mapper.toOrderDTO(order));
+        }
+        return orderDTOs;
     }
 
     @Override
     public void deleteById(Long id) {
+        orderRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Order not found"));
         orderRepository.deleteById(id);
     }
 
     @Override
-    public Order update(Long id, Order order) {
-        order.setIdOrder(id);
-        return orderRepository.save(order);
+    public List<OrderDTO> findByClientId(Long clientId) {
+        List<Order> orders = orderRepository.findByClientIdClient(clientId);
+        List<OrderDTO> orderDTOs = new ArrayList<>();
+        for (Order order : orders) {
+            orderDTOs.add(Mapper.toOrderDTO(order));
+        }
+        return orderDTOs;
     }
 
     @Override
-    public List<Order> findByClientId(Long clientId) {
-        return orderRepository.findByClientIdClient(clientId);
-    }
-
-    @Override
-    public Order updateOrderState(Long id, OrderState orderState) {
+    public OrderDTO updateOrderState(Long id, OrderState orderState) {
         Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
+                .orElseThrow(() -> new NotFoundException("Order not found"));
         order.setOrderState(orderState);
-        return orderRepository.save(order);
+        return Mapper.toOrderDTO(orderRepository.save(order));
     }
 }

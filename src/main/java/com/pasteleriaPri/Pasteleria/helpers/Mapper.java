@@ -3,6 +3,8 @@ package com.pasteleriaPri.Pasteleria.helpers;
 import com.pasteleriaPri.Pasteleria.dto.*;
 import com.pasteleriaPri.Pasteleria.entity.*;
 
+import java.util.Collections;
+
 import java.util.stream.Collectors;
 
 public class Mapper {
@@ -84,20 +86,29 @@ public class Mapper {
         return productBox;
     }
 
+    public static OrderProductDetailDTO toOrderDetailProductDTO(OrderProductDetail detail) {
+        return OrderProductDetailDTO.builder()
+                .productNameDTO(detail.getProduct().getProdName())
+                .quantityDTO(detail.getQuantity())
+                .unitPriceDTO(detail.getUnitPrice())
+                .subtotalDTO(detail.getSubtotal())
+                .build();
+    }
+
     public static OrderDTO toOrderDTO(Order order) {
         return OrderDTO.builder()
                 .destinationAddressDTO(order.getDestinationAddress())
                 .isPaidDTO(order.getIsPaid())
                 .orderDateDTO(order.getOrderDate())
                 .orderStateDTO(order.getOrderState())
-                .clientDTO(toClientDTO(order.getClient()))
-                .paymentDTO(toPaymentDTO(order.getPayment()))
-                .productsDTO(order.getProducts().stream()
-                        .map(Mapper::toProductDTO)
-                        .collect(Collectors.toList()))
-                .productBoxesDTO(order.getProductBoxes().stream()
-                        .map(Mapper::toProductBoxDTO)
-                        .collect(Collectors.toList()))
+                .clientDTO(order.getClient() != null ? toClientDTO(order.getClient()) : null)
+                .paymentDTO(order.getPayment() != null ? toPaymentDTO(order.getPayment()) : null)
+                .orderDetailsDTO(order.getOrderDetails() != null
+                        ? order.getOrderDetails().stream().map(Mapper::toOrderDetailProductDTO).collect(Collectors.toList())
+                        : Collections.emptyList())
+                .productBoxesDTO(order.getProductBoxes() != null
+                        ? order.getProductBoxes().stream().map(Mapper::toProductBoxDTO).collect(Collectors.toList())
+                        : Collections.emptyList())
                 .build();
     }
 

@@ -29,8 +29,5 @@ public class Product {
     private ProductType productType;
 
     @ManyToMany(mappedBy = "products")
-    private List<Order> orders;
-
-    @ManyToMany(mappedBy = "products")
     private List<ProductBox> productBoxes;
 }

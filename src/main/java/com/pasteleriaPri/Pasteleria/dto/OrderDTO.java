@@ -21,6 +21,6 @@ public class OrderDTO {
     private OrderState orderStateDTO;
     private ClientDTO clientDTO;
     private PaymentDTO paymentDTO;
-    private List<ProductDTO> productsDTO;
+    private List<OrderProductDetailDTO> orderDetailsDTO;
     private List<ProductBoxDTO> productBoxesDTO;
 }

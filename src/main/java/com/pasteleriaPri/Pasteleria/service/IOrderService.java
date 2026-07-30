@@ -1,17 +1,17 @@
 package com.pasteleriaPri.Pasteleria.service;
 
-import com.pasteleriaPri.Pasteleria.entity.Order;
+import com.pasteleriaPri.Pasteleria.dto.OrderDTO;
+import com.pasteleriaPri.Pasteleria.dto.OrderRequestDTO;
 import com.pasteleriaPri.Pasteleria.entity.OrderState;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface IOrderService {
-    Order save(Order order);
-    Optional<Order> findById(Long id);
-    List<Order> findAll();
+    OrderDTO createOrder(OrderRequestDTO orderRequestDTO);
+    Optional<OrderDTO> findById(Long id);
+    List<OrderDTO> findAll();
     void deleteById(Long id);
-    Order update(Long id, Order order);
-    List<Order> findByClientId(Long clientId);
-    Order updateOrderState(Long id, OrderState orderState);
+    List<OrderDTO> findByClientId(Long clientId);
+    OrderDTO updateOrderState(Long id, OrderState orderState);
 }
