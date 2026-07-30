@@ -1,6 +1,5 @@
 package com.pasteleriaPri.Pasteleria.dto;
 
-import com.pasteleriaPri.Pasteleria.entity.Order;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +20,6 @@ public class ClientDTO {
     private String phoneDTO;
     private String emailDTO;
     private String passwordDTO;
-    private List<Order> ordersDTO;
+    private List<OrderDTO> ordersDTO;
 
 }

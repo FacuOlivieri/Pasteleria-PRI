@@ -1,6 +1,5 @@
 package com.pasteleriaPri.Pasteleria.dto;
 
-import com.pasteleriaPri.Pasteleria.entity.PaymentType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,8 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class PaymentDTO {
+public class ProductTypeDTO {
 
-    private Double paymentAmountDTO;
-    private PaymentType paymentTypeDTO;
+    private String productTypeNameDTO;
 }

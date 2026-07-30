@@ -1,7 +1,5 @@
 package com.pasteleriaPri.Pasteleria.dto;
 
-import com.pasteleriaPri.Pasteleria.entity.BoxSize;
-import com.pasteleriaPri.Pasteleria.entity.BoxType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,10 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ProductBoxDTO {
+public class CartDTO {
 
-    private Double totalPriceDTO;
-    private BoxType boxTypeDTO;
-    private BoxSize boxSizeDTO;
     private List<ProductDTO> productsDTO;
+    private List<ProductBoxDTO> productBoxesDTO;
 }

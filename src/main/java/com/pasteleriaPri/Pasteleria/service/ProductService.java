@@ -1,10 +1,14 @@
 package com.pasteleriaPri.Pasteleria.service;
 
+import com.pasteleriaPri.Pasteleria.dto.ProductDTO;
 import com.pasteleriaPri.Pasteleria.entity.Product;
+import com.pasteleriaPri.Pasteleria.exception.NotFoundException;
+import com.pasteleriaPri.Pasteleria.helpers.Mapper;
 import com.pasteleriaPri.Pasteleria.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,33 +19,52 @@ public class ProductService implements IProductService {
     private ProductRepository productRepository;
 
     @Override
-    public Product save(Product product) {
-        return productRepository.save(product);
+    public ProductDTO save(ProductDTO productDTO) {
+        Product newProduct = Mapper.toProduct(productDTO);
+        productRepository.save(newProduct);
+        return Mapper.toProductDTO(newProduct);
     }
 
     @Override
-    public Optional<Product> findById(Long id) {
-        return productRepository.findById(id);
+    public Optional<ProductDTO> findById(Long id) {
+        return Optional.of(productRepository.findById(id).map(Mapper::toProductDTO).orElseThrow(() -> new NotFoundException("Product not found")));
     }
 
     @Override
-    public List<Product> findAll() {
-        return productRepository.findAll();
+    public List<ProductDTO> findAll() {
+        List<Product> products = productRepository.findAll();
+        List<ProductDTO> productDTOS = new ArrayList<>();
+
+        for(Product product : products) {
+            ProductDTO productDTO = Mapper.toProductDTO(product);
+            productDTOS.add(productDTO);
+        }
+
+        return productDTOS;
     }
 
     @Override
     public void deleteById(Long id) {
-        productRepository.deleteById(id);
+        if(productRepository.existsById(id)) {
+            productRepository.deleteById(id);
+        } else  {
+            throw new NotFoundException("Product not found");
+        }
     }
 
     @Override
-    public Product update(Long id, Product product) {
-        product.setIdProduct(id);
-        return productRepository.save(product);
-    }
+    public ProductDTO update(Long id, ProductDTO product) {
+        Product productToUpdate = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Product not found"));
 
-    @Override
-    public List<Product> findByProductTypeId(Long productTypeId) {
-        return productRepository.findByProductTypeIdProductType(productTypeId);
+        productToUpdate.setProdName(product.getProdNameDTO());
+        productToUpdate.setProdPrice(product.getProdPriceDTO());
+        productToUpdate.setProdQuantity(product.getProdQuantityDTO());
+        productToUpdate.setProdDescription(product.getProdDescriptionDTO());
+        productToUpdate.setImg(product.getImgDTO());
+        productToUpdate.setProductType(Mapper.toProductType(product.getProductTypeDTO()));
+
+        productRepository.save(productToUpdate);
+        return Mapper.toProductDTO(productToUpdate);
+
     }
 }
