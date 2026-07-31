@@ -12,4 +12,5 @@ public interface IProductService {
     void deleteById(Long id);
     ProductDTO update(Long id, ProductDTO product);
     List<ProductDTO> findAllByProductsByType(Long productTypeId);
+    List<ProductDTO> findAllByPriceRange(Double minPrice, Double maxPrice);
 }

@@ -77,4 +77,14 @@ public class ProductService implements IProductService {
         }
         return productDTOs;
     }
+
+    @Override
+    public List<ProductDTO> findAllByPriceRange(Double minPrice, Double maxPrice) {
+        List<Product> products = productRepository.findByProdPriceBetweenOrderByProdPriceAsc(minPrice, maxPrice);
+        List<ProductDTO> productDTOs = new ArrayList<>();
+        for (Product product : products) {
+            productDTOs.add(Mapper.toProductDTO(product));
+        }
+        return productDTOs;
+    }
 }

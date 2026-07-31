@@ -47,4 +47,9 @@ public class ProductController {
     public ResponseEntity<List<ProductDTO>> getProductsByType(@PathVariable Long productTypeId) {
         return ResponseEntity.ok(productService.findAllByProductsByType(productTypeId));
     }
+
+    @GetMapping("/price")
+    public ResponseEntity<List<ProductDTO>> getProductsByPriceRange(@RequestParam Double minPrice, @RequestParam Double maxPrice) {
+        return ResponseEntity.ok(productService.findAllByPriceRange(minPrice, maxPrice));
+    }
 }
