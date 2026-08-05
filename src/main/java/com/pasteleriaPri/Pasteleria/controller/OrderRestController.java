@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/pasteleria/order")
-public class OrderController {
+public class OrderRestController {
 
     @Autowired
     private OrderService orderService;

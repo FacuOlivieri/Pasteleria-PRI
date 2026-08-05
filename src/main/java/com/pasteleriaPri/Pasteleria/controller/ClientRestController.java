@@ -8,10 +8,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping ("/api/pasteleria/client")
-public class ClientController {
+public class ClientRestController {
 
     @Autowired
     private ClientService clientService;
@@ -24,17 +25,33 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClientDTO> getClientById(@PathVariable Long id) {
-        return ResponseEntity.ok(clientService.findById(id).get());
+    public ResponseEntity<Optional<ClientDTO>> getClientById(@PathVariable Long id) {
+        Optional<ClientDTO> client = clientService.findById(id);
+
+        if (client.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(clientService.findById(id));
     }
 
     @GetMapping
     public ResponseEntity<List<ClientDTO>> getAllClients() {
+
+        List<ClientDTO> clientDTOs = clientService.findAll();
+        if (clientDTOs.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
         return ResponseEntity.ok(clientService.findAll());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteClient(@PathVariable Long id) {
+        if (clientService.findById(id).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
         clientService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

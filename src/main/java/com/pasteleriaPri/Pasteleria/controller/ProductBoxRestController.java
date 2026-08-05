@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/pasteleria/productBox")
-public class ProductBoxController {
+public class ProductBoxRestController {
 
     @Autowired
     private ProductBoxService productBoxService;
