@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head(${product.prodNameDTO}, 'product.css')}"></head>
+
+<body>
+
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main>
+
+    <p class="page-alert page-alert--ok" th:if="${cartMessage}" th:text="${cartMessage}"></p>
+
+    <section class="product-detail" data-hero>
+        <div class="product-detail__inner">
+
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <a th:href="@{/pasteleria}">Home</a>
+                <span aria-hidden="true">/</span>
+                <a th:href="@{/pasteleria/product}">Catalog</a>
+                <span aria-hidden="true">/</span>
+                <span th:text="${product.prodNameDTO}">Product</span>
+            </nav>
+
+            <div class="product-detail__layout">
+
+                <div class="product-detail__media" data-hero-item>
+                    <img th:if="${product.imgDTO != null and !product.imgDTO.isEmpty()}"
+                         th:src="${product.imgDTO}" th:alt="${product.prodNameDTO}">
+                    <span th:unless="${product.imgDTO != null and !product.imgDTO.isEmpty()}"
+                          class="product-detail__placeholder"
+                          th:text="${#strings.substring(product.prodNameDTO, 0, 1)}"
+                          aria-hidden="true">P</span>
+                </div>
+
+                <div class="product-detail__info" data-hero-item>
+
+                    <p class="product-detail__type"
+                       th:if="${product.productTypeDTO != null}"
+                       th:text="${product.productTypeDTO.productTypeNameDTO}">Category</p>
+
+                    <h1 class="product-detail__title" th:text="${product.prodNameDTO}">Product name</h1>
+
+                    <p class="product-detail__price"
+                       th:text="'$ ' + ${#numbers.formatDecimal(product.prodPriceDTO, 1, 'POINT', 2, 'COMMA')}">
+                        $ 0,00
+                    </p>
+
+                    <p class="product-detail__desc" th:text="${product.prodDescriptionDTO}">Description</p>
+
+                    <p class="product-detail__stock"
+                       th:if="${product.prodQuantityDTO != null and product.prodQuantityDTO > 0}">
+                        <span th:text="${product.prodQuantityDTO}">0</span> available today
+                    </p>
+                    <p class="product-detail__stock product-detail__stock--out"
+                       th:if="${product.prodQuantityDTO == null or product.prodQuantityDTO <= 0}">
+                        Sold out for today &mdash; write to us for a custom date
+                    </p>
+
+                    <form class="product-detail__buy" method="post" th:action="@{/pasteleria/cart/add}">
+                        <input type="hidden" name="productId" th:value="${product.idProductDTO}">
+                        <input type="hidden" name="returnUrl" value="/pasteleria/cart">
+
+                        <div class="field field--inline">
+                            <label for="quantity">Quantity</label>
+                            <input type="number" id="quantity" name="quantity"
+                                   value="1" min="1" max="99" required>
+                        </div>
+
+                        <button class="btn btn--primary" type="submit">Add to cart</button>
+                    </form>
+
+                    <a class="back-link" th:href="@{/pasteleria/product}">&larr; Back to the catalog</a>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+
+</body>
+</html>

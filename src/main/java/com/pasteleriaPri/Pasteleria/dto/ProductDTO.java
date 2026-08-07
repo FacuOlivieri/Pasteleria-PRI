@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class ProductDTO {
 
+    private Long idProductDTO;
     private String prodNameDTO;
     private Integer prodQuantityDTO;
     private Double prodPriceDTO;

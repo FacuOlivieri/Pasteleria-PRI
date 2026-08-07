@@ -1,0 +1,20 @@
+/* =========================================================================
+   client.css - the create-account form.
+   ========================================================================= */
+
+.account-form {
+    padding: clamp(1.75rem, 4vw, 2.75rem);
+    background: var(--color-white);
+    border: 1px solid rgba(233, 153, 255, .55);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+}
+
+.account-form .btn {
+    margin-top: .5rem;
+    width: 100%;
+}
+
+@media (min-width: 520px) {
+    .account-form .btn { width: auto; }
+}

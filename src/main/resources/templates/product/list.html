@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Catalog', 'product.css')}"></head>
+
+<body>
+
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main>
+
+    <section class="page-head" data-hero>
+        <div class="page-head__inner">
+            <p class="section__eyebrow" data-hero-item>The catalog</p>
+            <h1 class="page-head__title" data-hero-item>Everything we are baking</h1>
+            <p class="page-head__lede" data-hero-item>
+                Twelve things we are proud of. Narrow them down by category, by price, or by both.
+            </p>
+        </div>
+    </section>
+
+    <p class="page-alert page-alert--ok" th:if="${cartMessage}" th:text="${cartMessage}"></p>
+
+    <section class="section" data-reveal>
+        <div class="section__inner">
+
+            <!-- Filters. A GET form so every result is a shareable, reloadable URL. -->
+            <form class="filters" method="get" th:action="@{/pasteleria/product}">
+                <div class="field field--inline">
+                    <label for="typeId">Category</label>
+                    <select id="typeId" name="typeId">
+                        <option value="">All categories</option>
+                        <option th:each="type : ${productTypes}"
+                                th:value="${type.idProductTypeDTO}"
+                                th:text="${type.productTypeNameDTO}"
+                                th:selected="${selectedTypeId != null and selectedTypeId == type.idProductTypeDTO}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="field field--inline">
+                    <label for="minPrice">Min price</label>
+                    <input type="number" id="minPrice" name="minPrice" min="0" step="50"
+                           placeholder="0" th:value="${selectedMinPrice}">
+                </div>
+
+                <div class="field field--inline">
+                    <label for="maxPrice">Max price</label>
+                    <input type="number" id="maxPrice" name="maxPrice" min="0" step="50"
+                           placeholder="Any" th:value="${selectedMaxPrice}">
+                </div>
+
+                <div class="filters__actions">
+                    <button class="btn btn--primary" type="submit">Apply</button>
+                    <a class="btn btn--ghost" th:href="@{/pasteleria/product}">Clear</a>
+                </div>
+            </form>
+
+            <p class="results-count">
+                <span th:text="${#lists.size(products)}">0</span> item(s)
+            </p>
+
+            <!-- Empty state -->
+            <div class="empty-state" th:if="${#lists.isEmpty(products)}">
+                <h2>Nothing matches that yet</h2>
+                <p>Try widening the price range, or clear the filters to see the whole catalog.</p>
+                <a class="btn btn--outline" th:href="@{/pasteleria/product}">Show everything</a>
+            </div>
+
+            <ul class="product-grid" th:unless="${#lists.isEmpty(products)}">
+                <li class="product-card" th:each="product : ${products}" data-reveal-step>
+
+                    <a class="product-card__media"
+                       th:href="@{/pasteleria/product/{id}(id=${product.idProductDTO})}">
+                        <img th:if="${product.imgDTO != null and !product.imgDTO.isEmpty()}"
+                             th:src="${product.imgDTO}" th:alt="${product.prodNameDTO}">
+                        <!-- No photo on file: a palette tile carrying the initial -->
+                        <span th:unless="${product.imgDTO != null and !product.imgDTO.isEmpty()}"
+                              class="product-card__placeholder"
+                              th:text="${#strings.substring(product.prodNameDTO, 0, 1)}"
+                              aria-hidden="true">P</span>
+                    </a>
+
+                    <div class="product-card__body">
+                        <p class="product-card__type"
+                           th:if="${product.productTypeDTO != null}"
+                           th:text="${product.productTypeDTO.productTypeNameDTO}">Category</p>
+
+                        <h2 class="product-card__title">
+                            <a th:href="@{/pasteleria/product/{id}(id=${product.idProductDTO})}"
+                               th:text="${product.prodNameDTO}">Product name</a>
+                        </h2>
+
+                        <p class="product-card__desc" th:text="${product.prodDescriptionDTO}">Description</p>
+
+                        <p class="product-card__price"
+                           th:text="'$ ' + ${#numbers.formatDecimal(product.prodPriceDTO, 1, 'POINT', 2, 'COMMA')}">
+                            $ 0,00
+                        </p>
+
+                        <form method="post" th:action="@{/pasteleria/cart/add}">
+                            <input type="hidden" name="productId" th:value="${product.idProductDTO}">
+                            <input type="hidden" name="quantity" value="1">
+                            <input type="hidden" name="returnUrl" th:value="${returnUrl}">
+                            <button class="btn btn--primary btn--block" type="submit">Add to cart</button>
+                        </form>
+                    </div>
+
+                </li>
+            </ul>
+
+        </div>
+    </section>
+
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+
+</body>
+</html>

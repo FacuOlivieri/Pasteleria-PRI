@@ -13,6 +13,7 @@ import java.util.List;
 @Data
 public class CartDTO {
 
-    private List<ProductDTO> productsDTO;
+    private List<CartItemDTO> itemsDTO;
     private List<ProductBoxDTO> productBoxesDTO;
+    private Double totalDTO;
 }

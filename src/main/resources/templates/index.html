@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Home', 'home.css')}"></head>
+
+<body>
+
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main>
+
+    <!-- ===================== HERO ===================== -->
+    <section class="hero" data-hero>
+        <div class="hero__art" aria-hidden="true">
+            <span class="hero__blob hero__blob--one"></span>
+            <span class="hero__blob hero__blob--two"></span>
+            <span class="hero__blob hero__blob--three"></span>
+        </div>
+
+        <div class="hero__inner">
+            <p class="hero__eyebrow" data-hero-item>Since 1998 &middot; Buenos Aires</p>
+
+            <h1 class="hero__title" data-hero-item>
+                Pastry worth<br>
+                <em>waiting</em> for.
+            </h1>
+
+            <p class="hero__lede" data-hero-item>
+                We are a small workshop of six people who still temper chocolate by hand and
+                let every dough rest overnight. Nothing here is made in advance, and nothing
+                leaves the kitchen we would not serve at our own table. Choose something
+                beautiful, and we will bake it the morning it is yours.
+            </p>
+
+            <div class="hero__actions" data-hero-item>
+                <a class="btn btn--primary" th:href="@{/pasteleria/product}">See the catalog</a>
+                <a class="btn btn--outline" href="#como-comprar">How ordering works</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Flash message coming back from the account form -->
+    <div class="page-alert page-alert--ok" th:if="${accountCreated}" th:text="${accountCreated}"></div>
+
+    <!-- ===================== HOW TO BUY (TIMELINE) ===================== -->
+    <section class="section section--surface" id="como-comprar" data-reveal>
+        <div class="section__inner">
+            <p class="section__eyebrow" data-reveal-title>Four steps</p>
+            <h2 class="section__title" data-reveal-title>How to order</h2>
+            <p class="section__lede">
+                No apps, no accounts you will never use again. Four steps, and the rest is our job.
+            </p>
+
+            <ol class="timeline">
+                <li class="timeline__step" data-reveal-step>
+                    <span class="timeline__marker">1</span>
+                    <div class="timeline__body">
+                        <h3 class="timeline__title">Browse the catalog</h3>
+                        <p>
+                            Filter by category or by what you feel like spending. Every piece lists
+                            what is inside it, because surprises belong in the box, not in the recipe.
+                        </p>
+                    </div>
+                </li>
+
+                <li class="timeline__step" data-reveal-step>
+                    <span class="timeline__marker">2</span>
+                    <div class="timeline__body">
+                        <h3 class="timeline__title">Fill your cart</h3>
+                        <p>
+                            Add what you want and adjust the amounts. Your cart follows you around
+                            the site, so you can keep looking without losing anything.
+                        </p>
+                    </div>
+                </li>
+
+                <li class="timeline__step" data-reveal-step>
+                    <span class="timeline__marker">3</span>
+                    <div class="timeline__body">
+                        <h3 class="timeline__title">Confirm your order</h3>
+                        <p>
+                            Tell us the date and the address. We confirm by email the same day,
+                            and we only start baking once you have said yes to everything.
+                        </p>
+                    </div>
+                </li>
+
+                <li class="timeline__step" data-reveal-step>
+                    <span class="timeline__marker">4</span>
+                    <div class="timeline__body">
+                        <h3 class="timeline__title">We bake, you enjoy</h3>
+                        <p>
+                            Your order is made the same morning it reaches you, packed cold and
+                            delivered by someone who works here. Never a courier who has no idea
+                            what is in the box.
+                        </p>
+                    </div>
+                </li>
+            </ol>
+        </div>
+    </section>
+
+    <!-- ===================== CONTACT ===================== -->
+    <section class="section" id="contacto" data-reveal>
+        <div class="section__inner section__inner--narrow">
+            <p class="section__eyebrow" data-reveal-title>Talk to us</p>
+            <h2 class="section__title" data-reveal-title>Ask us anything</h2>
+            <p class="section__lede">
+                Custom cakes, dietary questions, a date that feels impossible. Write to us and a
+                real person answers, usually within the day.
+            </p>
+
+            <p class="form-alert form-alert--ok" th:if="${contactSuccess}" th:text="${contactSuccess}"></p>
+            <p class="form-alert form-alert--error" th:if="${contactError}" th:text="${contactError}"></p>
+
+            <!--
+              Bound to ContactFormDTO. Validator.java is still a stub, so there is no
+              BindingResult with real errors to render - the browser's own HTML5
+              constraints are the only validation in play here.
+            -->
+            <form class="contact-form" method="post"
+                  th:action="@{/pasteleria/contact}"
+                  th:object="${contactFormDTO}">
+
+                <div class="field">
+                    <label for="senderName">Your name</label>
+                    <input type="text" id="senderName" th:field="*{senderNameDTO}"
+                           required maxlength="80" placeholder="Ana Gutierrez">
+                </div>
+
+                <div class="field">
+                    <label for="senderEmail">Your email</label>
+                    <input type="email" id="senderEmail" th:field="*{senderEmailDTO}"
+                           required maxlength="120" placeholder="ana@example.com">
+                </div>
+
+                <div class="field">
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" th:field="*{subjectDTO}"
+                           required maxlength="120" placeholder="A birthday cake for 20 people">
+                </div>
+
+                <div class="field">
+                    <label for="message">Message</label>
+                    <textarea id="message" rows="6" th:field="*{messageDTO}"
+                              required maxlength="2000"
+                              placeholder="Tell us the date, how many people, and anything you cannot eat."></textarea>
+                </div>
+
+                <button class="btn btn--primary" type="submit">Send message</button>
+            </form>
+        </div>
+    </section>
+
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+
+</body>
+</html>

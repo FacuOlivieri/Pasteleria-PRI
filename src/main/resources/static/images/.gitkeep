@@ -1,0 +1,8 @@
+# Drop product and hero photography here.
+#
+# Reference it from a template with a link expression, never a relative path:
+#   <img th:src="@{/images/torta-violeta.jpg}" alt="...">
+#
+# For catalog products, set Product.img to "/images/<file>.jpg" - product/list.html
+# and product/detail.html render it when present and fall back to a palette tile
+# when it is null or empty.

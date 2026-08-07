@@ -1,0 +1,198 @@
+/* =========================================================================
+   home.css - hero, "how to order" timeline, contact form. Home page only.
+   ========================================================================= */
+
+/* ------------------------------- hero ----------------------------------- */
+
+.hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(5rem, 12vw, 9rem) 1.5rem clamp(5rem, 11vw, 8rem);
+    background:
+        radial-gradient(120% 90% at 82% 8%, rgba(233, 153, 255, .55) 0%, transparent 58%),
+        radial-gradient(90% 80% at 8% 92%, rgba(244, 204, 255, .85) 0%, transparent 62%),
+        linear-gradient(160deg, var(--color-bg) 0%, #FBF0FF 55%, var(--color-surface) 100%);
+}
+
+/*
+   No photograph ships with this project, so the hero image is drawn: three
+   soft blobs in the palette, slowly drifting behind the copy. Drop a real
+   photo into static/images/ and swap this block for a background-image.
+*/
+.hero__art {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.hero__blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(46px);
+    opacity: .5;
+    animation: hero-drift 17s var(--ease) infinite alternate;
+}
+
+.hero__blob--one {
+    width: 30rem; height: 30rem;
+    top: -8rem; right: -6rem;
+    background: var(--color-accent);
+}
+
+.hero__blob--two {
+    width: 22rem; height: 22rem;
+    bottom: -6rem; left: -4rem;
+    background: var(--color-soft);
+    animation-delay: -6s;
+}
+
+.hero__blob--three {
+    width: 15rem; height: 15rem;
+    top: 45%; right: 22%;
+    background: var(--color-primary);
+    opacity: .16;
+    animation-delay: -11s;
+}
+
+@keyframes hero-drift {
+    from { transform: translate3d(0, 0, 0) scale(1); }
+    to   { transform: translate3d(-2.5rem, 2rem, 0) scale(1.14); }
+}
+
+.hero__inner {
+    max-width: var(--max-width);
+    margin-inline: auto;
+}
+
+.hero__eyebrow {
+    font-family: var(--font-title);
+    text-transform: uppercase;
+    letter-spacing: .26em;
+    font-size: .74rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    opacity: .8;
+    margin-bottom: 1.4rem;
+}
+
+.hero__title {
+    font-size: clamp(2.8rem, 8vw, 5.5rem);
+    line-height: 1.03;
+    margin-bottom: 1.8rem;
+}
+
+.hero__title em {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--color-ink);
+}
+
+.hero__lede {
+    max-width: 52ch;
+    font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+    line-height: 1.8;
+    margin-bottom: 2.6rem;
+    opacity: .9;
+}
+
+.hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+/* Hero items land one after another instead of all at once. */
+.js-reveal .hero [data-hero-item] { transition-delay: 0s; }
+.js-reveal .hero.is-visible [data-hero-item]:nth-child(1) { transition-delay: .05s; }
+.js-reveal .hero.is-visible [data-hero-item]:nth-child(2) { transition-delay: .16s; }
+.js-reveal .hero.is-visible [data-hero-item]:nth-child(3) { transition-delay: .27s; }
+.js-reveal .hero.is-visible [data-hero-item]:nth-child(4) { transition-delay: .38s; }
+
+/* ----------------------------- timeline --------------------------------- */
+
+.timeline {
+    position: relative;
+    max-width: 760px;
+    padding-left: 3.6rem;
+}
+
+/* The vertical rail behind the numbered markers. */
+.timeline::before {
+    content: "";
+    position: absolute;
+    left: 1.28rem;
+    top: .9rem;
+    bottom: .9rem;
+    width: 2px;
+    background: linear-gradient(180deg, var(--color-accent), var(--color-soft) 70%, transparent);
+}
+
+.timeline__step {
+    position: relative;
+    padding-bottom: 2.8rem;
+}
+
+.timeline__step:last-child { padding-bottom: 0; }
+
+.timeline__marker {
+    position: absolute;
+    left: -3.6rem;
+    top: 0;
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 50%;
+    background: var(--color-white);
+    border: 2px solid var(--color-accent);
+    color: var(--color-primary);
+    font-family: var(--font-title);
+    font-weight: 700;
+    font-size: .95rem;
+    box-shadow: var(--shadow-soft);
+    transition: transform .35s var(--ease), background-color .35s var(--ease),
+                color .35s var(--ease);
+}
+
+.timeline__step:hover .timeline__marker {
+    transform: scale(1.14);
+    background: var(--color-primary);
+    color: var(--color-white);
+}
+
+.timeline__title {
+    font-size: 1.3rem;
+    margin-bottom: .5rem;
+}
+
+.timeline__body p {
+    max-width: 56ch;
+    opacity: .88;
+}
+
+/* Steps cascade in, one after the other. */
+.js-reveal .timeline__step:nth-child(1).is-visible { transition-delay: .00s; }
+.js-reveal .timeline__step:nth-child(2).is-visible { transition-delay: .10s; }
+.js-reveal .timeline__step:nth-child(3).is-visible { transition-delay: .20s; }
+.js-reveal .timeline__step:nth-child(4).is-visible { transition-delay: .30s; }
+
+@media (max-width: 560px) {
+    .timeline { padding-left: 3rem; }
+    .timeline::before { left: 1.05rem; }
+    .timeline__marker { left: -3rem; width: 2.2rem; height: 2.2rem; }
+}
+
+/* --------------------------- contact form ------------------------------- */
+
+.contact-form {
+    padding: clamp(1.75rem, 4vw, 2.75rem);
+    background: var(--color-white);
+    border: 1px solid rgba(233, 153, 255, .55);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+}
+
+.contact-form .btn { margin-top: .5rem; }

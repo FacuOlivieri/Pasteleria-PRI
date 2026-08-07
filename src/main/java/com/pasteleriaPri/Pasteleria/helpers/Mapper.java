@@ -4,6 +4,7 @@ import com.pasteleriaPri.Pasteleria.dto.*;
 import com.pasteleriaPri.Pasteleria.entity.*;
 
 import java.util.Collections;
+import java.util.List;
 
 import java.util.stream.Collectors;
 
@@ -35,14 +36,22 @@ public class Mapper {
 
     public static ProductDTO toProductDTO(Product product) {
         return ProductDTO.builder()
+                .idProductDTO(product.getIdProduct())
                 .prodNameDTO(product.getProdName())
                 .prodQuantityDTO(product.getProdQuantity())
                 .prodPriceDTO(product.getProdPrice())
                 .prodDescriptionDTO(product.getProdDescription())
                 .imgDTO(product.getImg())
+                .productTypeDTO(product.getProductType() != null
+                        ? toProductTypeDTO(product.getProductType())
+                        : null)
                 .build();
     }
 
+    // Ids and productType are mapped entity -> DTO only, never DTO -> entity:
+    // carrying an id back would turn ProductService.save into an accidental
+    // upsert, and toProductType() builds a detached, id-less ProductType that
+    // would be inserted as a duplicate category on every save.
     public static Product toProduct(ProductDTO productDTO) {
         return Product.builder()
                 .prodName(productDTO.getProdNameDTO())
@@ -126,6 +135,7 @@ public class Mapper {
 
     public static ProductTypeDTO toProductTypeDTO(ProductType productType) {
         return ProductTypeDTO.builder()
+                .idProductTypeDTO(productType.getIdProductType())
                 .productTypeNameDTO(productType.getProductTypeName())
                 .build();
     }
@@ -136,20 +146,35 @@ public class Mapper {
         return productType;
     }
 
+    // The Cart POJO holds a flat product list with no quantity concept, so a
+    // round trip through it collapses every cart line to a quantity of 1.
+    // CartService keeps the authoritative quantities in session instead.
     public static CartDTO toCartDTO(Cart cart) {
+        List<CartItemDTO> items = cart.getProducts().stream()
+                .map(product -> CartItemDTO.builder()
+                        .productDTO(toProductDTO(product))
+                        .quantityDTO(1)
+                        .subtotalDTO(product.getProdPrice())
+                        .build())
+                .collect(Collectors.toList());
+
+        double total = items.stream()
+                .mapToDouble(item -> item.getSubtotalDTO() != null ? item.getSubtotalDTO() : 0d)
+                .sum();
+
         return CartDTO.builder()
-                .productsDTO(cart.getProducts().stream()
-                        .map(Mapper::toProductDTO)
-                        .collect(Collectors.toList()))
+                .itemsDTO(items)
                 .productBoxesDTO(cart.getProductBoxes().stream()
                         .map(Mapper::toProductBoxDTO)
                         .collect(Collectors.toList()))
+                .totalDTO(total)
                 .build();
     }
 
     public static Cart toCart(CartDTO cartDTO) {
         Cart cart = new Cart();
-        cart.setProducts(cartDTO.getProductsDTO().stream()
+        cart.setProducts(cartDTO.getItemsDTO().stream()
+                .map(CartItemDTO::getProductDTO)
                 .map(Mapper::toProduct)
                 .collect(Collectors.toList()));
         cart.setProductBoxes(cartDTO.getProductBoxesDTO().stream()

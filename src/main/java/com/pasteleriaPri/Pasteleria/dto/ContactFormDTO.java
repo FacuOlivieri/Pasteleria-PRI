@@ -9,8 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ProductTypeDTO {
+public class ContactFormDTO {
 
-    private Long idProductTypeDTO;
-    private String productTypeNameDTO;
+    private String senderNameDTO;
+    private String senderEmailDTO;
+    private String subjectDTO;
+    private String messageDTO;
 }

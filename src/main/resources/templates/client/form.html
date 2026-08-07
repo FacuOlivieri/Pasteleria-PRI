@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Create account', 'client.css')}"></head>
+
+<body>
+
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main>
+
+    <section class="page-head" data-hero>
+        <div class="page-head__inner">
+            <p class="section__eyebrow" data-hero-item>Join us</p>
+            <h1 class="page-head__title" data-hero-item>Create your account</h1>
+            <p class="page-head__lede" data-hero-item>
+                So we remember your address, your dates, and what you are allergic to.
+            </p>
+        </div>
+    </section>
+
+    <section class="section" data-reveal>
+        <div class="section__inner section__inner--narrow">
+
+            <!--
+              Bound to the existing ClientDTO. Validator.java is a stub, so the only
+              validation here is what the browser enforces.
+            -->
+            <form class="account-form" method="post"
+                  th:action="@{/pasteleria/client}"
+                  th:object="${clientDTO}">
+
+                <div class="field-row">
+                    <div class="field">
+                        <label for="username">First name</label>
+                        <input type="text" id="username" th:field="*{usernameDTO}" required maxlength="60">
+                    </div>
+                    <div class="field">
+                        <label for="surname">Last name</label>
+                        <input type="text" id="surname" th:field="*{surnameDTO}" required maxlength="60">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" th:field="*{emailDTO}" required maxlength="120">
+                </div>
+
+                <div class="field">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" th:field="*{passwordDTO}" required minlength="8" maxlength="72">
+                    <small class="field__hint">At least 8 characters.</small>
+                </div>
+
+                <div class="field">
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" th:field="*{phoneDTO}" maxlength="30">
+                </div>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label for="address">Address</label>
+                        <input type="text" id="address" th:field="*{addressDTO}" maxlength="120">
+                    </div>
+                    <div class="field">
+                        <label for="city">City</label>
+                        <input type="text" id="city" th:field="*{cityDTO}" maxlength="80">
+                    </div>
+                </div>
+
+                <button class="btn btn--primary" type="submit">Create account</button>
+            </form>
+
+        </div>
+    </section>
+
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+
+</body>
+</html>
