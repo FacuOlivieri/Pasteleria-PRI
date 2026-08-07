@@ -446,6 +446,21 @@ a { color: var(--color-primary); }
 
 .nav__cta { padding: .6rem 1.25rem; }
 
+/* Signed-in greeting. Not a .nav__link: it is not clickable, so it must not get
+   the underline-on-hover affordance that would suggest it is. */
+.nav__user {
+    color: var(--color-ink);
+    font-size: .93rem;
+    font-weight: 600;
+}
+
+/* Sign out is a form so it can POST. Strip the block-level form margins so the
+   button sits on the nav baseline like the anchors around it. */
+.nav__logout {
+    display: inline-flex;
+    margin: 0;
+}
+
 /* ----------------------------- footer ----------------------------------- */
 
 .site-footer {

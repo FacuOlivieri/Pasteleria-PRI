@@ -49,7 +49,27 @@
                       th:text="${cartItemCount}">0</span>
             </a>
 
-            <a class="btn btn--ghost nav__cta" th:href="@{/pasteleria/client/new}">Create account</a>
+            <!--
+              Signed out: sign in / create account. Signed in: name + sign out.
+              loggedClient comes from GlobalWebModelAdvice, which reads the session,
+              so every web page gets it without the controller doing anything.
+            -->
+            <th:block th:if="${loggedClient == null}">
+                <a class="nav__link" th:href="@{/pasteleria/login}">Sign in</a>
+                <a class="btn btn--ghost nav__cta" th:href="@{/pasteleria/client/new}">Create account</a>
+            </th:block>
+
+            <th:block th:if="${loggedClient != null}">
+                <span class="nav__user" th:text="'Hi, ' + ${loggedClient.usernameDTO}">Hi, there</span>
+
+                <!--
+                  A form, not a link. Signing out changes state, and a GET version
+                  could be triggered by any <img> tag or a browser prefetching links.
+                -->
+                <form class="nav__logout" method="post" th:action="@{/pasteleria/logout}">
+                    <button class="btn btn--ghost nav__cta" type="submit">Sign out</button>
+                </form>
+            </th:block>
         </nav>
     </div>
 </header>

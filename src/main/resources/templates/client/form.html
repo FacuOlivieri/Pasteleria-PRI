@@ -30,6 +30,8 @@
                   th:action="@{/pasteleria/client}"
                   th:object="${clientDTO}">
 
+                <p class="form-alert form-alert--error" th:if="${registerError}" th:text="${registerError}"></p>
+
                 <div class="field-row">
                     <div class="field">
                         <label for="username">First name</label>

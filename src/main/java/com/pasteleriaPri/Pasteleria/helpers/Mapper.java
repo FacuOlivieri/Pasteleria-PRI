@@ -12,6 +12,7 @@ public class Mapper {
 
     public static ClientDTO toClientDTO(Client client) {
         return ClientDTO.builder()
+                .idClientDTO(client.getIdClient())
                 .usernameDTO(client.getUsername())
                 .surnameDTO(client.getSurname())
                 .emailDTO(client.getEmail())
@@ -22,6 +23,10 @@ public class Mapper {
                 .build();
     }
 
+    // idClientDTO is mapped entity -> DTO only, never DTO -> entity. Same reasoning
+    // as toProduct() below: an id carried back into the entity would make
+    // ClientService.save() a silent update of whatever row holds that id, instead
+    // of the insert it is supposed to be.
     public static Client toClient(ClientDTO clientDTO) {
         return Client.builder()
                 .username(clientDTO.getUsernameDTO())

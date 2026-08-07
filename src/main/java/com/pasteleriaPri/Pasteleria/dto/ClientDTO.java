@@ -13,6 +13,11 @@ import java.util.List;
 @Data
 public class ClientDTO {
 
+    // Mapped entity -> DTO only (see Mapper). The session needs it to know which
+    // client is logged in; carrying it back the other way would turn save() into
+    // an accidental update.
+    private Long idClientDTO;
+
     private String usernameDTO;
     private String surnameDTO;
     private String addressDTO;

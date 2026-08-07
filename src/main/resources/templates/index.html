@@ -39,8 +39,12 @@
         </div>
     </section>
 
-    <!-- Flash message coming back from the account form -->
-    <div class="page-alert page-alert--ok" th:if="${accountCreated}" th:text="${accountCreated}"></div>
+    <!--
+      Generic flash banner for actions that redirect home (currently: signing out).
+      Account creation no longer lands here - it redirects to the sign-in page with
+      its own message instead.
+    -->
+    <div class="page-alert page-alert--ok" th:if="${pageMessage}" th:text="${pageMessage}"></div>
 
     <!-- ===================== HOW TO BUY (TIMELINE) ===================== -->
     <section class="section section--surface" id="como-comprar" data-reveal>

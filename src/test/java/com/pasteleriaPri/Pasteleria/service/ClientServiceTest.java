@@ -2,6 +2,7 @@ package com.pasteleriaPri.Pasteleria.service;
 
 import com.pasteleriaPri.Pasteleria.dto.ClientDTO;
 import com.pasteleriaPri.Pasteleria.entity.Client;
+import com.pasteleriaPri.Pasteleria.exception.DuplicateEmailException;
 import com.pasteleriaPri.Pasteleria.exception.NotFoundException;
 import com.pasteleriaPri.Pasteleria.helpers.Mapper;
 import com.pasteleriaPri.Pasteleria.repository.ClientRepository;
@@ -151,6 +152,77 @@ public class ClientServiceTest {
         verify(clientRepoMock).delete(client1);
         verifyNoMoreInteractions(clientRepoMock);
 
+    }
+
+    // --- login -------------------------------------------------------------
+    // Passwords are compared in plaintext for now; see the TODO in ClientService.
+    // These tests describe the behaviour, not the comparison strategy, so they
+    // stay valid once hashing is introduced.
+
+    @Test
+    void loginSucceedsWhenEmailAndPasswordMatch(){
+        Client client = new Client(7L,"Facu","Lopez","Jujuy 3030","San Justo","15300200","facu@gmail.com","1234", null);
+        when(clientRepoMock.findByEmail("facu@gmail.com")).thenReturn(Optional.of(client));
+
+        Optional<ClientDTO> result = clientService.login("facu@gmail.com", "1234");
+
+        verify(clientRepoMock).findByEmail("facu@gmail.com");
+        verifyNoMoreInteractions(clientRepoMock);
+
+        assertTrue(result.isPresent());
+        assertEquals("Facu", result.get().getUsernameDTO());
+        // The id has to survive into the DTO or the session cannot identify who logged in.
+        assertEquals(7L, result.get().getIdClientDTO());
+    }
+
+    @Test
+    void loginFailsWhenPasswordIsWrong(){
+        Client client = new Client(7L,"Facu","Lopez","Jujuy 3030","San Justo","15300200","facu@gmail.com","1234", null);
+        when(clientRepoMock.findByEmail("facu@gmail.com")).thenReturn(Optional.of(client));
+
+        Optional<ClientDTO> result = clientService.login("facu@gmail.com", "wrong-password");
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void loginFailsWhenEmailIsUnknown(){
+        when(clientRepoMock.findByEmail("nobody@gmail.com")).thenReturn(Optional.empty());
+
+        Optional<ClientDTO> result = clientService.login("nobody@gmail.com", "1234");
+
+        // Empty, and NOT an exception: an unknown email and a wrong password must be
+        // indistinguishable to the caller, otherwise the login form doubles as a way
+        // to discover which addresses are registered.
+        assertTrue(result.isEmpty());
+    }
+
+    // --- duplicate email ---------------------------------------------------
+
+    @Test
+    void saveRejectsDuplicateEmail(){
+        Client existing = new Client(1L,"Facu","Lopez","Jujuy 3030","San Justo","15300200","facu@gmail.com","1234", null);
+        when(clientRepoMock.findByEmail("facu@gmail.com")).thenReturn(Optional.of(existing));
+
+        ClientDTO clientDTO = ClientDTO.builder()
+                .usernameDTO("Otro")
+                .surnameDTO("Cliente")
+                .emailDTO("facu@gmail.com")
+                .passwordDTO("5678")
+                .build();
+
+        assertThrows(DuplicateEmailException.class, () -> clientService.save(clientDTO));
+
+        // The point of the guard: nothing reaches the database.
+        verify(clientRepoMock, never()).save(any(Client.class));
+    }
+
+    @Test
+    void emailExistsReflectsTheRepository(){
+        when(clientRepoMock.findByEmail("facu@gmail.com"))
+                .thenReturn(Optional.of(new Client(1L,"Facu","Lopez",null,null,null,"facu@gmail.com","1234", null)));
+
+        assertTrue(clientService.emailExists("facu@gmail.com"));
     }
 
 }
