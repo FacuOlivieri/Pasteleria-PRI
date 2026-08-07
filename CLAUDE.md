@@ -19,15 +19,23 @@ There is no separate lint/format tool configured — rely on `mvn test` (surefir
 Classic layered Spring MVC stack, one vertical per domain concept:
 
 ```
-controller (@RestController) -> service interface + impl (@Service) -> repository (Spring Data JPA) -> entity (@Entity)
+controller (@RestController | @Controller) -> service interface + impl (@Service) -> repository (Spring Data JPA) -> entity (@Entity)
 ```
 
-- **Controllers** (`Restcontroller/`) are thin: bind HTTP to a service call and wrap the result in `ResponseEntity`. All routes are under `/api/pasteleria/<resource>`.
+- **Controllers** live in two sibling subpackages, split by what they return:
+  - `controller/rest/` — `@RestController`, thin: bind HTTP to a service call and wrap the result in `ResponseEntity`. All routes under `/api/pasteleria/<resource>`.
+  - `controller/web/` — `@Controller`, returns Thymeleaf view names, never `ResponseEntity`. All routes under `/pasteleria/<resource>` (no `/api`). Governed by `THYMELEAF-CONVENTIONS.md`.
+
+  Both call the same service layer; neither touches a repository directly. `@SpringBootApplication` scans the whole base package, so subpackages need no extra component-scan config.
 - **Services** are split into an interface (`IXxxService`) and implementation (`XxxService`), injected via `@Autowired` field injection (not constructor injection) — follow this pattern for new services.
 - **DTOs vs entities**: controllers and services never leak JPA entities across the API boundary — everything crossing the controller layer is a `dto/*DTO` (Lombok `@Builder`). Conversion between entity and DTO is centralized in one static class, `helpers/Mapper.java` (no MapStruct/ModelMapper) — add new conversions there rather than inlining mapping logic in services.
 - **Not-found handling**: `exception/NotFoundException` is thrown from services (`repository.findById(...).orElseThrow(...)`) — note it extends `NullPointerException`, not `RuntimeException`, which is unusual and matters if you're writing `catch`/`@ExceptionHandler` logic around it.
 - **`helpers/Validator.java`** is a stub (all methods return `null`) — not wired into any service yet. Don't assume validation is happening anywhere it isn't explicitly called.
 - **SOLID Principles**: Maintain use of SOLID principles.
+- **/spec**: documentation to apply Spec Driven Development: `constitution/` (mision, road-map, tech-stack),
+`features/NNN-name` (spec, plan, tasks)
+- `AGENTS.md`: operative guide of the proyect
+
 
 ### Entity relationships
 

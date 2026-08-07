@@ -1,4 +1,4 @@
-package com.pasteleriaPri.Pasteleria.controller;
+package com.pasteleriaPri.Pasteleria.controller.web;
 
 import com.pasteleriaPri.Pasteleria.dto.ProductDTO;
 import com.pasteleriaPri.Pasteleria.service.IProductService;

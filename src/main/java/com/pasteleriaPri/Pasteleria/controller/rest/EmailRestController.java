@@ -1,4 +1,4 @@
-package com.pasteleriaPri.Pasteleria.controller;
+package com.pasteleriaPri.Pasteleria.controller.rest;
 
 import com.pasteleriaPri.Pasteleria.service.IEmailService;
 import org.springframework.beans.factory.annotation.Autowired;

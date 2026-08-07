@@ -1,4 +1,4 @@
-package com.pasteleriaPri.Pasteleria.controller;
+package com.pasteleriaPri.Pasteleria.controller.web;
 
 import com.pasteleriaPri.Pasteleria.dto.ContactFormDTO;
 import com.pasteleriaPri.Pasteleria.service.IEmailService;

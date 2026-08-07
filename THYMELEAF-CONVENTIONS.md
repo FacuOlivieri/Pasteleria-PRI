@@ -28,7 +28,7 @@ src/main/resources/static/
 
 ## Architecture — Web Controllers
 
-- Class name: `XxxWebController` (e.g. `ClientWebController`), one per domain entity, in the existing `controller/` package alongside the REST controllers.
+- Class name: `XxxWebController` (e.g. `ClientWebController`), one per domain entity, in the `controller/web/` package. The REST controllers live in the sibling `controller/rest/` package — the two are kept apart on purpose so the boundary is structural, not just a naming convention.
 - Annotated `@Controller` (not `@RestController` — this is the whole point, it must return view names, not serialized bodies).
 - Base route: `@RequestMapping("/pasteleria/<resource>")` — **no `/api` prefix**. That prefix is reserved for the JSON API (`/api/pasteleria/<resource>`), and reusing it would collide with the `@RestController` mappings on the same path.
 - Inject the **service interface** (`IClientService`, `IProductService`, …), not the concrete class. This is the one place this doc deviates from what you'll see in the existing `@RestController`s (some inject the concrete `ClientService`/`ProductService` directly) — that's an existing inconsistency in the API layer, not a pattern to copy. The project's own `CLAUDE.md` states services are split into interface + impl specifically so callers depend on the interface; web controllers should follow that correctly.

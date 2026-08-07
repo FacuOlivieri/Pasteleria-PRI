@@ -1,4 +1,4 @@
-package com.pasteleriaPri.Pasteleria.controller;
+package com.pasteleriaPri.Pasteleria.controller.rest;
 
 import com.pasteleriaPri.Pasteleria.dto.ProductBoxDTO;
 import com.pasteleriaPri.Pasteleria.entity.BoxSize;

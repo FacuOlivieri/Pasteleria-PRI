@@ -1,4 +1,4 @@
-package com.pasteleriaPri.Pasteleria.controller;
+package com.pasteleriaPri.Pasteleria.controller.rest;
 
 import com.pasteleriaPri.Pasteleria.dto.OrderDTO;
 import com.pasteleriaPri.Pasteleria.dto.OrderRequestDTO;

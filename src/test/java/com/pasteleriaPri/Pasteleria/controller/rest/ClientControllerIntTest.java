@@ -1,4 +1,4 @@
-package com.pasteleriaPri.Pasteleria.controller;
+package com.pasteleriaPri.Pasteleria.controller.rest;
 
 import com.pasteleriaPri.Pasteleria.dto.ClientDTO;
 import com.pasteleriaPri.Pasteleria.entity.Client;
