@@ -12,9 +12,13 @@ import org.springframework.context.annotation.Profile;
 import java.util.List;
 
 /**
- * Fills the in-memory database with demo catalog data so the web pages have
- * something to render. Only active under the "dev" profile:
- * {@code mvn -Dspring.profiles.active=dev spring-boot:run}
+ * Fills the database with demo catalog data so the web pages have something to
+ * render. Active under the "dev" (H2, in memory) and "local" (MariaDB via XAMPP)
+ * profiles: {@code ./mvnw -Dspring.profiles.active=local spring-boot:run}
+ *
+ * Safe against the persistent "local" database: the {@code count() > 0} guard
+ * below means it seeds once, on an empty catalog, and never again. It is not
+ * active under "test", which builds its own fixtures.
  *
  * This writes through the repositories rather than ProductService on purpose:
  * Mapper.toProduct() deliberately drops the product type (see Mapper), so
@@ -23,7 +27,7 @@ import java.util.List;
  * THYMELEAF-CONVENTIONS.md does not apply to it.
  */
 @Configuration
-@Profile("dev")
+@Profile({"dev", "local"})
 public class DevDataSeeder {
 
     @Bean
